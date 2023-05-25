@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    input, #bio{
+        width: 500px;
+        margin-top: 10px
+        }
+    .settingsForm{
+        margin-left: 200px
+        }
+
+</style>
+<h2 style="text-align: center; margin-top: 75px">Account Settings</h2>
+<div style=" margin-left: 200px; ">
+    <form action="settingsSave" class="settingsForm" method="POST" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <input class="info" id="first_name" name="first_name" type="text" placeholder="First Name" value="{{profile.first_name}}"><br>
+        <input class="info" id="last_name" name="last_name" type="text" placeholder="Last Name" value="{{profile.last_name}}"><br>
+        <input class="info" id="email" name="email" type="text" placeholder="Email" value="{{user.email}}"><br>
+        <input class="info" id="locality" name="locality" type="text" placeholder="Locality" value="{{profile.locality}}"><br>
+        <input class="info" id="city" name="city" type="text" placeholder="City" value="{{profile.city}}"><br>
+        <input class="info" id="state" name="state" type="text" placeholder="State" value="{{profile.state}}"><br>
+        <input class="info" id="country" required name="country" type="text" placeholder="Country" value="{{profile.country}}"><br>
+        <input class="info" id="phone" name="phone" type="text" placeholder="Phone" value="{{profile.phone}}"><br>
+        <input class="info" id="dob" name="dob" type="date" placeholder="DOB" value="{{dob}}" required><br>
+        <textarea class="info" id="bio" name="bio" placeholder="Bio" rows="5"cols="10">{{profile.bio}}</textarea><br>
+        <label>Profile Image: </label>
+        <input class="info" type="file" name="profile" id="profile" placeholder="Profile Image" value="{{profile.profile_image}}"><br>
+        <label>Background Image: </label>
+        <input class="info" type="file" name="background" id="background" placeholder="Background Image" value="{{profile.background_image}}"><br><br>
+    <button type="submit" style="margin-left: 20%; width: 100px">SAVE</button>
+    </form>
+
+</div>
+<script>
+    info = document.getElementsByClassName("info");
+    console.log(info);
+    for(i = 0; i<= 11; i++){
+        if(info[i].value == "None"){
+            info[i].value = "";
+           }
+           }
+</script>
+{% endblock %}

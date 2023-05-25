@@ -1,0 +1,71 @@
+{% extends 'base.html'%}
+{% block content%}
+<div class="mainContent">
+    <br>
+<div class="oldPosts">
+    {% for Querypost in posts %}
+        {% for post in Querypost %}
+
+    <div class="div_oldPost">
+        {% for post_profile in all_profiles %}
+        {% if post_profile.email == post.user %}
+
+
+        <a href="profile?email={{post.user}}">
+            {% if post_profile.profile_image == "media/profile_image/default_profile.jpg" %}
+                <img alt="" class="profile_img" src="{{post_profile.profile_image}}">
+                {% else %}
+                <img alt="" class="profile_img" src="media/{{post_profile.profile_image}}">
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+            {{post.user}}<br>{{post.posted_date}}<br>
+        </a>
+        {% for image in images %}
+        {% if image.post.id == post.id %}
+        <a href="media/{{image.images}}">
+            <img src="media/{{image.images}}" height="30%" width="30%" class="postImage"
+                 alt="media/{{image.images}}">
+
+        </a>
+        <br>
+        {% endif %}
+        {% endfor %}
+        <textarea readonly onkeyup="textAreaAdjust(this)"
+                  style="overflow:auto; min-height: 100px; width: 600px">{{post.description}}</textarea>
+        <div class="utility">
+            <form action="likePost/{{post.id}}" class="postUtility">
+                <button type="submit" class="btn btn-primary">
+                    Likes <span class="badge text-bg-secondary">{{post.no_of_likes}}</span>
+                </button>
+                <input type="text" value="index" hidden id="likeRedirect" name="likeRedirect">
+
+            </form>
+
+            <form action="comment" class="postUtility">
+                <input type="text" value="{{post.id}}" id="post_id" name="post_id" hidden>
+                <button type="submit" class="btn btn-primary">
+                    Comments <span class="badge text-bg-secondary">{{post.no_of_comments}}</span>
+                </button>
+            </form>
+
+            <form action="bookmarkPost" class="postUtility">
+                <button type="submit" class="btn btn-primary">
+                    Bookmark
+                </button>
+                <input type="text" value="{{post.id}}" hidden id="post" name="post">
+
+            </form>
+        </div>
+        <br>
+
+
+    </div>
+    <br><br>
+    {% endfor %}
+
+    {% endfor %}
+
+</div>
+</div>
+{% endblock %}

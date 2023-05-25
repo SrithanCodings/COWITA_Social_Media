@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<style xmlns="http://www.w3.org/1999/html">
+    .notification{
+    }
+</style>
+<div class="mainContent">
+    <center>
+            <h1>Notifications</h1>
+    </center>
+    <br>
+    {% for notification in notifications %}
+    {% for notify_profile in all_profiles %}
+    {% if notify_profile.email == notification.notify_from_user %}
+    <div class="notification">
+        <div class="notify_image">
+            <a href="profile?email={{notify_profile.email}}">
+                {% if notify_profile.profile_image == "media/profile_image/default_profile.jpg" %}
+                <img alt="" class="profile_img" src="{{notify_profile.profile_image}}">
+                {% else %}
+                <img alt="" class="profile_img" src="media/{{notify_profile.profile_image}}">
+                {% endif %}
+                {% if not notification.is_seen %}
+                <b>{{notification.message}}</b>
+                <br>
+                <b>{{notification.date}}</b>
+                {% else %}
+                {{notification.message}}
+                <br>
+                {{notification.date}}
+                {% endif %}
+            </a>
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% endfor %}
+        {% endfor %}
+
+     {% if not notifications %}
+    <h1>You have no new notifications</h1>
+    {% endif %}
+</div>
+{% endblock %}

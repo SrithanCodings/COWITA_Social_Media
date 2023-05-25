@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
+<div class="container" style="margin-top: 80px">
+    <h1>Signup</h1>
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+
+        <input style="border: 2px solid #ce99ff; width:200px; float:left" type="text" class="form-control" id="f_name"
+               name="f_name"
+               placeholder="First name" required>
+        <input style="border: 2px solid #ce99ff; width:200px; float:right" type="text" class="form-control" id="l_name"
+               name="l_name"placeholder="Last name (Optional)"><br><br>
+        {% if errors_username != None %}
+            <li>{{errors_username}}</li>
+        {% endif %}
+        <input type="email" style="border: 2px solid #ce99ff; width:420px;" class="form-control" id="email" name="email"
+               placeholder="Email">
+        {% if errors_email != None %}
+            <li>{{errors_email}}</li>
+        {% endif %}
+        <input style="border: 2px solid #ce99ff" type="number" class="form-control" id="phone" name="phone"
+               placeholder="Phone Number" required><br>
+        <label>Date of Birth</label><br>
+        <input style="border: 2px solid #ce99ff" type="date" class="form-control" id="date" name="date"
+               placeholder="date">
+        <input style="border: 2px solid #ce99ff" type="password" class="form-control" id="password1" name="password1"
+               placeholder="Password">
+        {% for error in errors%}
+            <li>{{error}}</li>
+        {% endfor %}
+        <input style="border: 2px solid #ce99ff" type="password" class="form-control" id="password2" name="password2"
+               placeholder="Password Confirmation">
+
+        <input style="border: 2px solid #ce99ff" type="submit" value="Register" id="submit_bt"/><br>
+        <label style="margin-left: 100px">Already registered? <a href="{% url 'signin' %}">Signin</a></label>
+    </form>
+</div>
+<script src="{% static '/users/user_login.js' %}"></script>
+{%endblock%}

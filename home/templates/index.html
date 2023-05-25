@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{%block content %}
+{% load static %}
+<link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
+
+<div class="mainContent">
+    <div class="posts">
+        <div class="newPost">
+            <form action="upload" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div id="profile_img">
+                    {% if profile.profile_image == 'media/profile_image/default_profile.jpg'%}
+                    <a href="{{profile.profile_image}}">
+                        <img alt="" class="profile_img" height="100px" src="{{profile.profile_image}}" width="100px">
+                    </a>
+                    {% else %}
+                    <a href="media/{{profile.profile_image}}">
+                        <img alt="" class="profile_img" height="100px" src="media/{{profile.profile_image}}"
+                             width="100px">
+                    </a>
+                    {% endif %}
+
+                </div>
+                <textarea cols="90" id="description" name="description" onkeyup="textAreaAdjust(this)"
+                          placeholder="What's in your mind {{profile.first_name}} {{profile.last_name}}" rows="5"
+                          style="overflow: auto"></textarea><br>
+                <input id="file_input" multiple name="file_input" type="file">
+                <button type="submit">Post</button>
+            </form>
+
+            Images/Videos
+        </div>
+        <div class="oldPosts">
+            {% for post in posts %}
+            {% if post.user is not None %}
+            <div class="div_oldPost">
+                {% for post_profile in all_profiles %}
+                {% if post_profile.email == post.user %}
+
+                <a href="profile?email={{post.user}}">
+                    {% if post_profile.profile_image == "media/profile_image/default_profile.jpg" %}
+                    <img alt="" class="profile_img" src="{{post_profile.profile_image}}">
+                    {% else %}
+                    <img alt="" class="profile_img" src="media/{{post_profile.profile_image}}">
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {{post.user}}<br>{{post.posted_date}}<br>
+                </a>
+                {% for image in images %}
+                {% if image.post.id == post.id %}
+                <a href="media/{{image.images}}">
+                    <img alt="media/{{image.images}}" class="postImage" height="30%" src="media/{{image.images}}"
+                         width="30%">
+
+                </a>
+                <br>
+                {% endif %}
+                {% endfor %}
+                <textarea onkeyup="textAreaAdjust(this)" readonly
+                          style="overflow:auto; min-height: 100px; width: 600px">{{post.description}}</textarea>
+                <div class="utility">
+                    <form action="likePost/{{post.id}}" class="postUtility">
+                        <button class="btn btn-primary" type="submit">
+                            Likes <span class="badge text-bg-secondary">{{post.no_of_likes}}</span>
+                        </button>
+                        <input hidden id="likeRedirect" name="likeRedirect" type="text" value="index">
+
+                    </form>
+
+                    <form action="comment" class="postUtility">
+                        <input hidden id="post_id" name="post_id" type="text" value="{{post.id}}">
+                        <button class="btn btn-primary" type="submit">
+                            Comments <span class="badge text-bg-secondary">{{post.no_of_comments}}</span>
+                        </button>
+                    </form>
+
+                    <form action="bookmarkPost" class="postUtility">
+                        <button class="btn btn-primary" type="submit">
+                            Bookmark
+                        </button>
+                        <input hidden id="post" name="post" type="text" value="{{post.id}}">
+
+                    </form>
+                </div>
+                <br>
+
+
+            </div>
+            <br><br>
+            {% endif %}
+            {% endfor %}
+
+
+        </div>
+    </div>
+</div>
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+<script>
+
+    function textAreaAdjust(element) {
+  element.style.height = "100px";
+  element.style.height = (25+element.scrollHeight)+"px";
+}
+ function showComments(id){}
+
+w3.hide(".comments");
+
+
+
+</script>
+
+{%endblock%}

@@ -1,0 +1,29 @@
+{%extends 'base.html' %}
+{%block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
+<div style="margin-top: 100px;">
+    <div class="container" style="margin-top: 100px; margin-left: 500px">
+    <h1>Signin</h1>
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <input type="email" id="email" name="email" style="border: 2px solid #ce99ff; width:400px;" placeholder="Email">
+        <input type="password" id="password" name="password" style="border: 2px solid #ce99ff; width: 400px"
+               placeholder="Password">
+        {% if errors != None %}
+
+        <li>{{errors}}</li>
+        {% endif %}
+
+        <input style="border: 2px solid #ce99ff" type="submit" value="Signin" id="submit_bt"/><br>
+        <label style="margin-left: 100px;">Not yet registered? <a href="{% url 'signup' %}">Signup</a></label>
+    </form>
+</div>
+</div>
+
+<script src="{% static '/users/user_login.js' %}"></script>
+{%endblock%}
+
+
+

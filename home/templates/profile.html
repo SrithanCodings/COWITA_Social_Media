@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .main{
+        margin-left: 200px;
+        margin-top: 50px;
+    }
+
+    .background_img{
+        background-color: grey;
+        text-align: center;
+
+        }
+
+    #follow_btn{
+        float: left
+        }
+
+    .backimg{
+        width: 691px;
+        height: 450px;
+        }
+
+    .username{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+
+
+        float: left;
+        margin-left: 375px;
+        margin-bottom: 120px
+        }
+
+    .myPosts{
+    border: solid 2px green;
+        height: 80%;
+        width: 60%;
+        float: left;
+        margin-bottom: 20px;
+        margin-left: 20px;
+        }
+    .profile_img{
+        width: 150px;
+        height: 150px;
+        bottom: 0;
+        left: 0;
+        border: solid 2px;
+        border-radius: 100%;
+
+        float: left;
+        margin: 3px;
+        margin-top: 320px;
+        }
+
+    #detailsDiv{
+        margin-left: 100px
+        }
+
+
+
+
+
+</style>
+<div class="main">
+    <div class="background_img">
+        {% if profile.profile_image == 'media/profile_image/default_profile.jpg'%}
+        <img class="profile_img" src="{{profile.profile_image}}">
+        <h3 class="username" style="margin-bottom: 100px">@{{user.username}}</h3>
+        <h2 class="username">{{profile.first_name}} {{profile.last_name}}</h2>
+        <img alt="" class="backimg" src="{{profile.background_image}}">
+        {% else %}
+        <img class="profile_img" src="media/{{profile.profile_image}}">
+        <h3 class="username" style="margin-bottom: 100px">@{{user.username}}</h3>
+        <h2 class="username">{{profile.first_name}} {{profile.last_name}}</h2>
+        <img alt="" class="backimg" src="media/{{profile.background_image}}" width="65%">
+        {% endif %}
+        <div class="follow">
+            {% if follow %}
+            <form action="follow" class="postUtility" id="follow_btn">
+                <input hidden id="email_id" name="email_id" type="text" value="{{email}}">
+                <button class="btn btn-primary" style="height: 50px; width: 100px; font-size:28px; float: right; margin-left:700px"
+                        type="submit">
+                    Follow <span class="badge text-bg-secondary"></span>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <br><br><br><br>
+    <div id="detailsDiv">
+        <h4>Details</h4>
+        <label class="details">Name: {{profile.first_name}} {{profile.last_name}}</label><br>
+        <label class="details">Location:
+            {% if profile.locality != None %}
+            {{profile.locality}},
+            {% endif %}
+            {% if profile.city != None %}
+            {{profile.city}},
+            {% endif %}
+            {% if profile.state != None %}
+            {{profile.state}},
+            {% endif %}
+            {% if profile.country != None %}
+            {{profile.country}}
+            {% endif %}</label><br>
+        <label class="details">Email: {{profile.email}}</label><br>
+        <label class="details">Phone number: {{profile.phone}}</label><br>
+        {% if profile.dob != None %}
+        <label class="details">Date Of Birth: {{profile.dob}}</label><br>
+        {% endif %}
+        {% if profile.bio != None %}
+        <textarea class="details" cols="50" readonly rows="10">Bio: {{profile.bio}}</textarea><br>
+        {% endif %}
+
+    </div>
+    <h3>Followings({{profile.no_of_following}})</h3>
+    <div class="followings" style="">
+        {% for follower in followers %}
+        <div class="follower_profile">
+            {% if follower.follower.profile_image == 'media/profile_image/default_profile.jpg'%}
+            <img src="{{follower.follower.profile_image}}" height="200px" alt="{{follower.profile_image}}"
+                 width="200px"><br>
+            {% else %}
+            <img src="media/{{follower.follower.profile_image}}" height="200px" alt="media/{{follower.profile_image}}"
+                 width="200px"><br>
+            {% endif %}
+
+            <label>{{follower.follower.first_name}} {{follower.follower.last_name}}</label>
+        </div>
+        {% endfor %}
+        <h3>Followers({{profile.no_of_followers}})</h3>
+        <div class="followings">
+            {% for following in followings %}
+            <div class="following_profile">
+                <img alt="media/{{follower.profile_image}}" height="200px" src="media/{{following.profile_image}}"
+                     width="200px"><br>
+                <label>{{following.first_name}} {{following.last_name}}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <h3>My Posts</h3>
+        {% for post in posts %}
+        <div class="myPosts" id="{{post.id}}">
+                    {% if profile.profile_image == 'media/profile_image/default_profile.jpg'%}
+                    <a href="{{profile.profile_image}}">
+                        <img alt="" class="profile__image" height="50px" src="{{profile.profile_image}}" width="50px">
+                    </a>
+                    {% else %}
+                    <a href="media/{{profile.profile_image}}">
+                        <img alt="" class="profile__image" height="100px" src="media/{{profile.profile_image}}"
+                             width="100px">
+                    </a>
+                    {% endif %}
+            <form action="deletePost/<{{post.id}}>" method="POST">
+                {% csrf_token %}
+                {{post.user}}
+                            {% if not follow %}
+
+                <button id="deletebtn" type="submit">
+                    <a href="{% url 'deletePost' post.id %}">DELETE</a></button>
+                                {% endif %}
+
+                <br>{{post.posted_date}}<br>
+                {% for image in images %}
+                {% if image.post.id == post.id %}
+                <a href="media/{{image.images}}">
+                    <img class="postImage" height="30%" src="media/{{image.images}}" width="30%">
+                </a>
+                <br>
+                {% endif %}
+                {% endfor %}
+                <textarea onkeyup="textAreaAdjust(this)" readonly
+                          style="overflow:auto; min-height: 100px; width: 600px">{{post.description}}</textarea>
+                <br><br><br>
+            </form>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+    <script>
+
+
+    </script>
+    {% endblock %}
